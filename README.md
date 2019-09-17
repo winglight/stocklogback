@@ -16,4 +16,5 @@ parse-server --appId stocklog --masterKey dkElkfdjiEOij843lKD --databaseURI mong
 npm install -g parse-dashboard
 parse-dashboard --appId stocklog --masterKey dkElkfdjiEOij843lKD --serverURL "http://localhost:1337/parse" --appName stocklog
 parse-dashboard --appId stocklog --masterKey dkElkfdjiEOij843lKD --serverURL "http://stock.jyrz.xyz/parse" --appName stocklog
+parse-dashboard --appId stocklog --masterKey dkElkfdjiEOij843lKD --serverURL "http://stocklogs.herokuapp.com/parse" --appName stocklog
 ```

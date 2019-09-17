@@ -117,6 +117,7 @@ class ReasonQuickCreateButton extends Component {
                             // We want no toolbar at all as we have our modal actions
                             toolbar={null}
                         >
+                            <NumberInput source="seq" label={"顺序"}/>
                             <TextInput source="content" label={"理由"}/>
                             <NumberInput source="score" label={"分数"}/>
                         </SimpleForm>

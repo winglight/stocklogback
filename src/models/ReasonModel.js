@@ -7,6 +7,7 @@ export class ReasonModel extends Parse.Object {
         // Pass the ClassName to the Parse.Object constructor
         super('ReasonModel');
 
+        this.seq = 0;//顺序
         this.content = "";//理由
         this.score = 0;//分数，-1 - 负面；1 - 正面；0 - 中性
     }

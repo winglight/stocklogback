@@ -13,6 +13,8 @@ import {
     SingleFieldList,
     ReferenceField,
     ChipField,
+    BooleanInput,
+    BooleanField,
     ReferenceInput,
     ReferenceArrayInput,
     SelectArrayInput,
@@ -25,6 +27,7 @@ import {
     SelectInput,
     SimpleForm,
     TextInput,
+    LongTextInput,
     NumberInput,
     ReferenceArrayField,
     CardActions,
@@ -38,6 +41,8 @@ import {
 } from 'react-admin';
 import {SuggestionSelect, LogSelect} from "../models/LogModel";
 import ReasonQuickCreateButton from "../component/ReasonQuickCreateButton"
+import { DateInput, TimeInput, DateTimeInput } from 'react-admin-date-inputs';
+import RichTextInput from 'ra-input-rich-text';
 
 const cardActionStyle = {
     zIndex: 2,
@@ -60,10 +65,18 @@ const LogFilter = (props) => (
     </Filter>
 );
 
-const ResonReferenceInput = props => (
-    <Fragment>
+const ReasonReferenceInput = props => (
+    <Fragment options={{
+        fullWidth: true,
+        fullWidthInput: true,
+    }}>
         <ReferenceArrayInput {...props}>
-            <SelectArrayInput optionText={reasonOptionRenderer} />
+            <SelectArrayInput optionText={reasonOptionRenderer}
+                              options={{
+                                  fullWidth: true,
+                                  fullWidthInput: true,
+                              }}
+            />
         </ReferenceArrayInput>
 
         <ReasonQuickCreateButton />
@@ -96,6 +109,9 @@ export const LogList = (props) => (
                 </SingleFieldList>
             </ReferenceArrayField>
             <SelectField source="logType" label={"LOG类型"} choices={LogSelect} />
+            <RichTextField source="comment" label={"操作评价"}/>
+            <BooleanField source="isSuccessful" valueLabelTrue="满意" valueLabelFalse="不满意" label="操作是否满意"/>
+            <DateField source="commentTime" locales="zh-CN" showTime label="操作评价时间"/>
             <DeleteButton/>
             <EditButton/>
             <ShowButton/>
@@ -123,6 +139,9 @@ export const LogShow = (props) => (
                 </SingleFieldList>
             </ReferenceArrayField>
             <SelectField source="logType" label={"LOG类型"} choices={LogSelect} />
+            <RichTextField source="comment" label={"操作评价"}/>
+            <BooleanField source="isSuccessful" valueLabelTrue="满意" valueLabelFalse="不满意" label="操作是否满意"/>
+            <DateField source="commentTime" locales="zh-CN" showTime label="操作评价时间"/>
         </SimpleShowLayout>
     </Show>
 );
@@ -142,15 +161,22 @@ export const LogEdit = (props) => (
             <SelectInput source="suggested_action" label={"推荐动作"} choices={SuggestionSelect} />
             <TextInput source="star" label={"评级"}/>
             <NumberInput source="score" label={"评分"}/>
-            <ResonReferenceInput label="理由" reference="ReasonModel" source="reason_ids" perPage={10000}/>
+            <ReasonReferenceInput label="理由" reference="ReasonModel" source="reason_ids" perPage={10000}
+                                 sort={{ field: 'seq', order: 'ASC' }}/>
             <SelectInput source="logType" label={"LOG类型"} choices={LogSelect} />
+            <RichTextInput source="comment" label={"操作评价"}/>
+            <BooleanInput source="isSuccessful" valueLabelTrue="满意" valueLabelFalse="不满意" label="操作是否满意"/>
+            <DateTimeInput source="commentTime" label="操作评价时间" options={{ format: 'YYYY-MM-dd, HH:mm:ss', ampm: false, clearable: true }} />
         </SimpleForm>
     </Edit>
 );
 
 export const LogCreate = (props) => (
     <Create {...props}>
-        <SimpleForm redirect={redirect}>
+        <SimpleForm redirect={redirect} options={{
+            fullWidth: true,
+            fullWidthInput: true,
+        }}>
             <DisabledInput source="id" />
             <ReferenceInput label="待选股" source="selected_stock_id" reference="SelectedStockModel">
                 <SelectInput optionText={selectStockOptionRenderer} />
@@ -163,8 +189,15 @@ export const LogCreate = (props) => (
             <SelectInput source="suggested_action" label={"推荐动作"} choices={SuggestionSelect} />
             <TextInput source="star" label={"评级"}/>
             <NumberInput source="score" label={"评分"}/>
-            <ResonReferenceInput label="理由" reference="ReasonModel" source="reason_ids" perPage={10000}/>
+            <ReasonReferenceInput label="理由" reference="ReasonModel" source="reason_ids" perPage={10000}
+                                 sort={{ field: 'seq', order: 'ASC' }} options={{
+                fullWidth: true,
+                fullWidthInput: true,
+            }}/>
             <SelectInput source="logType" label={"LOG类型"} choices={LogSelect} />
+            <RichTextInput source="comment" label={"操作评价"}/>
+            <BooleanInput source="isSuccessful" valueLabelTrue="满意" valueLabelFalse="不满意" label="操作是否满意"/>
+            <DateTimeInput source="commentTime" label="操作评价时间" options={{ format: 'YYYY-MM-dd, HH:mm:ss', ampm: false, clearable: true }} />
         </SimpleForm>
     </Create>
 );

@@ -72,9 +72,10 @@ const CreateToolbar = props => (
 );
 
 export const ReasonList = (props) => (
-    <List {...props} title="日志列表" filters={<ReasonFilter />} sort={{field: 'content', order: 'ASC'}} perPage={25} actions={<ListActions/>}>
+    <List {...props} title="日志列表" filters={<ReasonFilter />} sort={{field: 'seq', order: 'ASC'}} perPage={50} actions={<ListActions/>}>
         <Datagrid options={{multiSelectable:true}} bodyOptions={{ stripedRows: true, showRowHover: true , displayRowCheckbox:true}} headerOptions={{adjustForCheckbox:true}} rowOptions={{selectable: true}}>
             {/*<TextField source="id"/>*/}
+            <TextField source="seq" label={"顺序"}/>
             <TextField source="content" label={"理由"}/>
             <TextField source="score" label={"分数"}/>
             <DeleteButton/>
@@ -87,6 +88,7 @@ export const ReasonList = (props) => (
 export const ReasonShow = (props) => (
     <Show {...props}>
         <SimpleShowLayout>
+            <TextField source="seq" label={"顺序"}/>
             <TextField source="content" label={"理由"}/>
             <TextField source="score" label={"分数"}/>
         </SimpleShowLayout>
@@ -97,6 +99,7 @@ export const ReasonEdit = (props) => (
     <Edit title="日志编辑" {...props}>
         <SimpleForm toolbar={<CreateToolbar />} redirect="List">
             <DisabledInput source="id"/>
+            <NumberInput source="seq" label={"顺序"} step={10}/>
             <TextInput source="content" label={"理由"}/>
             <NumberInput source="score" label={"分数"}/>
         </SimpleForm>
@@ -107,6 +110,7 @@ export const ReasonCreate = (props) => (
     <Create {...props}>
         <SimpleForm toolbar={<CreateToolbar />} redirect="List">
             <DisabledInput source="id" />
+            <NumberInput source="seq" label={"顺序"} step={10}/>
             <TextInput source="content" label={"理由"}/>
             <NumberInput source="score" label={"分数"}/>
         </SimpleForm>

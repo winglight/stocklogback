@@ -11,6 +11,8 @@ import {
     SelectField,
     ImageField,
     UrlField,
+    BooleanField,
+    RichTextField,
     ReferenceManyField,
     ReferenceArrayField,
     SingleFieldList,
@@ -52,7 +54,8 @@ const ListActions = ({resource, filters, displayedFilters, filterValues, basePat
 
 const ShowActions = ({ basePath, data, resource }) => (
     <CardActions style={cardActionStyle}>
-        <EditButton basePath={basePath} record={data} />
+        <EditButton/>
+        <ShowButton/>
         {/* Add your custom actions */}
         <Button component={Link}
                     to={{
@@ -64,12 +67,12 @@ const ShowActions = ({ basePath, data, resource }) => (
 
 const ListFilter = (props) => (
     <Filter {...props}>
-        <SelectInput label="策略" source="strategy" choices={StrategyCategory} filterDefaultValues={StrategyCategory[0]} alwaysOn/>
-        <SelectInput label="超参数" source="hyper_params" choices={HyperParams} filterDefaultValues="" alwaysOn/>
-        <TextInput label="选股日期" source="date" filterDefaultValues={moment().format('YYYY-MM-DD')} alwaysOn />
-        <TextInput label="股票编码" source="code" filterDefaultValues="" alwaysOn />
-        <TextInput label="搜索" source="q" filterDefaultValues="" alwaysOn />
-        <SelectInput label="状态" source="status" choices={StatusSelect} filterDefaultValues="" alwaysOn/>
+        <SelectInput label="策略" source="strategy" choices={StrategyCategory} filterdefaultvalues={StrategyCategory[0]} alwaysOn/>
+        <SelectInput label="超参数" source="hyper_params" choices={HyperParams} filterdefaultvalues="" alwaysOn/>
+        <TextInput label="选股日期" source="date" filterdefaultvalues={moment().format('YYYY-MM-DD')} alwaysOn />
+        <TextInput label="股票编码" source="code" filterdefaultvalues="" alwaysOn />
+        <TextInput label="搜索" source="q" filterdefaultvalues="" alwaysOn />
+        <SelectInput label="状态" source="status" choices={StatusSelect} filterdefaultvalues="" alwaysOn/>
     </Filter>
 );
 
@@ -80,10 +83,10 @@ export const SelectedStockList = (props) => (
                   headerOptions={{adjustForCheckbox:true}} rowOptions={{selectable: true}} rowClick="expand" expand={<LogShow />}>
             {/*<TextField source="id"/>*/}
             <TextField source="date" label={"选股日期"}/>
-            <TextField source="strategy" label={"策略名称"}/>
-            <TextField source="hyper_params"label={"超参数组合"}/>
             <TextField source="code"label={"代码"}/>
             <TextField source="name"label={"名称"}/>
+            <TextField source="strategy" label={"策略名称"}/>
+            <TextField source="hyper_params"label={"超参数组合"}/>
             <NumberField source="good_bad"label={"gb策略值"}/>
             <NumberField source="good"label={"当天good值"}/>
             <NumberField source="bad"label={"当天bad值"}/>
@@ -93,7 +96,6 @@ export const SelectedStockList = (props) => (
             <NumberField source="vol50_change"label={"成交量变动"} options={{ maximumFractionDigits: 2 }} />
             <SelectField source="status" label={"状态"} choices={StatusSelect} />
             <DateField source="updatedAt" locales="zh-CN" showTime label="更新时间"/>
-            <DeleteButton/>
             <EditButton/>
             <ShowButton/>
         </Datagrid>
@@ -101,12 +103,13 @@ export const SelectedStockList = (props) => (
 );
 
 export const LogShow = (props) => (
-    <Show title="选股详情" actions={<ShowActions/>} {...props}>
+    <Show title="l" actions={<ShowActions/>} {...props}>
     <SimpleShowLayout>
     <ReferenceManyField
         label=""
         reference="LogModel"
         target="selected_stock_id"
+        sort={{ field: 'createdAt', order: 'ASC' }}
     >
         <Datagrid>
             <TextField source="suggested_low_price" label={"建议较低价格"}/>
@@ -117,13 +120,17 @@ export const LogShow = (props) => (
             <SelectField source="suggested_action" label={"推荐动作"} choices={SuggestionSelect} />
             <TextField source="star" label={"评级"}/>
             <TextField source="score" label={"评分"}/>
-            <ReferenceArrayField label="理由" reference="ReasonModel" source="reason_ids">
+            <ReferenceArrayField label="理由" reference="ReasonModel" source="reason_ids"
+                                 sort={{ field: 'seq', order: 'ASC' }}>
                 <SingleFieldList>
                     <ChipField source="content" />
                 </SingleFieldList>
             </ReferenceArrayField>
             <SelectField source="logType" label={"LOG类型"} choices={LogSelect} />
-            <TextField source="updatedAt" label={"更新时间"}/>
+            <DateField source="updatedAt" locales="zh-CN" showTime label="更新时间"/>
+            <RichTextField source="comment" label={"操作评价"}/>
+            <BooleanField source="isSuccessful" valueLabelTrue="满意" valueLabelFalse="不满意" label="操作是否满意"/>
+            <DateField source="commentTime" locales="zh-CN" showTime label="操作评价时间"/>
             <EditButton />
         </Datagrid>
     </ReferenceManyField>
@@ -168,6 +175,9 @@ export const SelectedStockShow = (props) => (
                         </SingleFieldList>
                     </ReferenceArrayField>
                     <SelectField source="logType" label={"LOG类型"} choices={LogSelect} />
+                    <RichTextField source="comment" label={"操作评价"}/>
+                    <BooleanField source="isSuccessful" valueLabelTrue="满意" valueLabelFalse="不满意" label="操作是否满意"/>
+                    <DateField source="commentTime" locales="zh-CN" showTime label="操作评价时间"/>
                     <EditButton />
                 </Datagrid>
             </ReferenceManyField>
@@ -176,7 +186,7 @@ export const SelectedStockShow = (props) => (
 );
 
 export const SelectedStockEdit = (props) => (
-    <Edit title={"编辑选中股票"} {...props}>
+    <Edit title={"编辑选中股票"} actions={<ShowActions/>} {...props}>
         <SimpleForm>
             <DisabledInput source="id"/>
             <DisabledInput source="date" label={"选股日期"}/>
@@ -189,6 +199,7 @@ export const SelectedStockEdit = (props) => (
                 label="日志"
                 reference="LogModel"
                 target="selected_stock_id"
+                sort={{ field: 'createdAt', order: 'ASC' }}
             >
                 <Datagrid>
                     <TextField source="suggested_low_price" label={"建议较低价格"}/>
@@ -205,6 +216,9 @@ export const SelectedStockEdit = (props) => (
                         </SingleFieldList>
                     </ReferenceArrayField>
                     <SelectField source="logType" label={"LOG类型"} choices={LogSelect} />
+                    <RichTextField source="comment" label={"操作评价"}/>
+                    <BooleanField source="isSuccessful" valueLabelTrue="满意" valueLabelFalse="不满意" label="操作是否满意"/>
+                    <DateField source="commentTime" locales="zh-CN" showTime label="操作评价时间"/>
                     <EditButton />
                 </Datagrid>
             </ReferenceManyField>

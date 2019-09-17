@@ -52,6 +52,9 @@ export default class LogModel extends Parse.Object {
         this.score = 0;//评分——来自理由的综合得分
         this.reason_ids = [];//理由，id数组
         this.logType = LogType.UNCANDIDATE;//log类型
+        this.comment = "";//操作评价
+        this.isSuccessful = false;//操作是否满意
+        // this.commentTime = "";//操作评价时间
     }
 
     findAll() {
