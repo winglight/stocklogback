@@ -1,7 +1,7 @@
 import {ParseAuth, ParseClient} from "ra-data-parse";
 
 const parseConfig = {
-    URL: 'http://stocklogs.herokuapp.com/parse',
+    URL: 'http://stock.jyrz.xyz/parse',
     JAVASCRIPT_KEY: '',
     APP_ID: 'stocklog'
 }

@@ -10,6 +10,8 @@ export const LogType = {
   ORDER: "order",//下单
   HOLD: "hold",//持有
   SELL: "sell",//卖出
+  TRANSFER_OUT: "out",//现金转出
+  TRANSFER_IN: "in",//现金转入
 };
 
 //建议类型
@@ -47,6 +49,7 @@ export default class LogModel extends Parse.Object {
         this.expected_low_price = 0;//止损价格
         this.expected_high_price = 0;//止盈价格
         this.current_price = 0;//当前价格
+        this.current_position = 0;//当前仓位（占比）
         this.suggested_action = SuggestionType.NONE;//推荐动作
         this.star = "D";//评级：A - 建议购买；B - 待观察；C - 不建议购买
         this.score = 0;//评分——来自理由的综合得分

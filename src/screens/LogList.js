@@ -100,6 +100,7 @@ export const LogList = (props) => (
             <TextField source="expected_low_price" label={"止损价格"}/>
             <TextField source="expected_high_price" label={"止盈价格"}/>
             <TextField source="current_price" label={"当前价格"}/>
+            <TextField source="current_position" label={"当前仓位"}/>
             <SelectField source="suggested_action" label={"推荐动作"} choices={SuggestionSelect} />
             <TextField source="star" label={"评级"}/>
             <TextField source="score" label={"评分"}/>
@@ -130,6 +131,7 @@ export const LogShow = (props) => (
             <TextField source="expected_low_price" label={"止损价格"}/>
             <TextField source="expected_high_price" label={"止盈价格"}/>
             <TextField source="current_price" label={"当前价格"}/>
+            <TextField source="current_position" label={"当前仓位"}/>
             <SelectField source="suggested_action" label={"推荐动作"} choices={SuggestionSelect} />
             <TextField source="star" label={"评级"}/>
             <TextField source="score" label={"评分"}/>
@@ -158,6 +160,7 @@ export const LogEdit = (props) => (
             <NumberInput source="expected_low_price" label={"止损价格"}/>
             <NumberInput source="expected_high_price" label={"止盈价格"}/>
             <NumberInput source="current_price" label={"当前价格"}/>
+            <NumberInput source="current_position" label={"当前仓位"}/>
             <SelectInput source="suggested_action" label={"推荐动作"} choices={SuggestionSelect} />
             <TextInput source="star" label={"评级"}/>
             <NumberInput source="score" label={"评分"}/>
@@ -186,6 +189,7 @@ export const LogCreate = (props) => (
             <NumberInput source="expected_low_price" label={"止损价格"}/>
             <NumberInput source="expected_high_price" label={"止盈价格"}/>
             <NumberInput source="current_price" label={"当前价格"}/>
+            <NumberInput source="current_position" label={"当前仓位"}/>
             <SelectInput source="suggested_action" label={"推荐动作"} choices={SuggestionSelect} />
             <TextInput source="star" label={"评级"}/>
             <NumberInput source="score" label={"评分"}/>

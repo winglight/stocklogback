@@ -24,6 +24,7 @@ import {
     DisabledInput,
     SelectInput,
     SimpleForm,
+    Pagination,
     CardActions,
     TextInput,
     ShowButton,
@@ -43,6 +44,7 @@ const cardActionStyle = {
     float: 'right',
 };
 
+const ListPagination = props => <Pagination rowsPerPageOptions={[10, 25, 50, 100]} {...props} />
 const reasonOptionRenderer = reason => `${reason.content} : ${reason.score}`;
 
 const ListActions = ({resource, filters, displayedFilters, filterValues, basePath, showFilter}) => (
@@ -77,7 +79,7 @@ const ListFilter = (props) => (
 );
 
 export const SelectedStockList = (props) => (
-    <List {...props} title={"选股列表"} filters={<ListFilter />} sort={{field: 'date', order: 'DESC'}} perPage={25}
+    <List {...props} title={"选股列表"} filters={<ListFilter />} sort={{field: 'date', order: 'DESC'}} perPage={25} pagination={<ListPagination />}
           actions={<ListActions/>}>
         <Datagrid options={{multiSelectable:true}} bodyOptions={{ stripedRows: true, showRowHover: true , displayRowCheckbox:true}}
                   headerOptions={{adjustForCheckbox:true}} rowOptions={{selectable: true}} rowClick="expand" expand={<LogShow />}>
