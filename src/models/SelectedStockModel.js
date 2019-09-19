@@ -58,6 +58,7 @@ export class SelectedStockModel extends Parse.Object {
         // this.price50_change;//过去50个交易日价格平均值变更比例
         // this.vol50_change;//过去50个交易日成交量平均值变更比例
         // this.return_rate;//回报率
+        // this.star = "D";//评级：A - 建议购买；B - 待观察；C - 不建议购买
         this.status = Status.SELECTED;
     }
 

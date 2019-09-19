@@ -39,7 +39,7 @@ import {
     Toolbar,
     showNotification
 } from 'react-admin';
-import {SuggestionSelect, LogSelect} from "../models/LogModel";
+import {SuggestionSelect, LogSelect, StarSelect} from "../models/LogModel";
 import ReasonQuickCreateButton from "../component/ReasonQuickCreateButton"
 import { DateInput, TimeInput, DateTimeInput } from 'react-admin-date-inputs';
 import RichTextInput from 'ra-input-rich-text';
@@ -102,7 +102,7 @@ export const LogList = (props) => (
             <TextField source="current_price" label={"当前价格"}/>
             <TextField source="current_position" label={"当前仓位"}/>
             <SelectField source="suggested_action" label={"推荐动作"} choices={SuggestionSelect} />
-            <TextField source="star" label={"评级"}/>
+            <SelectField source="star" label={"评级"} choices={StarSelect} />
             <TextField source="score" label={"评分"}/>
             <ReferenceArrayField label="理由" reference="ReasonModel" source="reason_ids">
                 <SingleFieldList>
@@ -133,7 +133,7 @@ export const LogShow = (props) => (
             <TextField source="current_price" label={"当前价格"}/>
             <TextField source="current_position" label={"当前仓位"}/>
             <SelectField source="suggested_action" label={"推荐动作"} choices={SuggestionSelect} />
-            <TextField source="star" label={"评级"}/>
+            <SelectField source="star" label={"评级"} choices={StarSelect} />
             <TextField source="score" label={"评分"}/>
             <ReferenceArrayField label="理由" reference="ReasonModel" source="reason_ids">
                 <SingleFieldList>
@@ -162,7 +162,7 @@ export const LogEdit = (props) => (
             <NumberInput source="current_price" label={"当前价格"}/>
             <NumberInput source="current_position" label={"当前仓位"}/>
             <SelectInput source="suggested_action" label={"推荐动作"} choices={SuggestionSelect} />
-            <TextInput source="star" label={"评级"}/>
+            <SelectInput source="star" label={"评级"} choices={StarSelect} />
             <NumberInput source="score" label={"评分"}/>
             <ReasonReferenceInput label="理由" reference="ReasonModel" source="reason_ids" perPage={10000}
                                  sort={{ field: 'seq', order: 'ASC' }}/>
@@ -191,7 +191,7 @@ export const LogCreate = (props) => (
             <NumberInput source="current_price" label={"当前价格"}/>
             <NumberInput source="current_position" label={"当前仓位"}/>
             <SelectInput source="suggested_action" label={"推荐动作"} choices={SuggestionSelect} />
-            <TextInput source="star" label={"评级"}/>
+            <SelectInput source="star" label={"评级"} choices={StarSelect} />
             <NumberInput source="score" label={"评分"}/>
             <ReasonReferenceInput label="理由" reference="ReasonModel" source="reason_ids" perPage={10000}
                                  sort={{ field: 'seq', order: 'ASC' }} options={{

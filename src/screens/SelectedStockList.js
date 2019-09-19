@@ -36,7 +36,7 @@ import { Link } from 'react-router-dom';
 import { DateInput, TimeInput, DateTimeInput } from 'react-admin-date-inputs';
 import moment from 'moment';
 import {StrategyCategory, HyperParams, StatusSelect} from '../models/SelectedStockModel'
-import LogModel, {LogSelect, SuggestionSelect} from "../models/LogModel";
+import LogModel, {LogSelect, SuggestionSelect, StarSelect} from "../models/LogModel";
 
 const cardActionStyle = {
     zIndex: 2,
@@ -87,6 +87,7 @@ export const SelectedStockList = (props) => (
             <TextField source="date" label={"选股日期"}/>
             <TextField source="code"label={"代码"}/>
             <TextField source="name"label={"名称"}/>
+            <SelectField source="star" label={"评级"} choices={StarSelect} />
             <TextField source="strategy" label={"策略名称"}/>
             <TextField source="hyper_params"label={"超参数组合"}/>
             <NumberField source="good_bad"label={"gb策略值"}/>
@@ -98,14 +99,13 @@ export const SelectedStockList = (props) => (
             <NumberField source="vol50_change"label={"成交量变动"} options={{ maximumFractionDigits: 2 }} />
             <SelectField source="status" label={"状态"} choices={StatusSelect} />
             <DateField source="updatedAt" locales="zh-CN" showTime label="更新时间"/>
-            <EditButton/>
-            <ShowButton/>
+            <ShowActions/>
         </Datagrid>
     </List>
 );
 
 export const LogShow = (props) => (
-    <Show title="l" actions={<ShowActions/>} {...props}>
+    <Show title="l" {...props}>
     <SimpleShowLayout>
     <ReferenceManyField
         label=""
@@ -120,7 +120,7 @@ export const LogShow = (props) => (
             <TextField source="expected_high_price" label={"止盈价格"}/>
             <TextField source="current_price" label={"当前价格"}/>
             <SelectField source="suggested_action" label={"推荐动作"} choices={SuggestionSelect} />
-            <TextField source="star" label={"评级"}/>
+            <SelectField source="star" label={"评级"} choices={StarSelect} />
             <TextField source="score" label={"评分"}/>
             <ReferenceArrayField label="理由" reference="ReasonModel" source="reason_ids"
                                  sort={{ field: 'seq', order: 'ASC' }}>
@@ -148,6 +148,7 @@ export const SelectedStockShow = (props) => (
             <TextField source="hyper_params"label={"超参数组合"}/>
             <TextField source="code"label={"代码"}/>
             <TextField source="name"label={"名称"}/>
+            <SelectField source="star" label={"评级"} choices={StarSelect} />
             <TextField source="good_bad"label={"gb策略值"}/>
             <TextField source="good"label={"当天good值"}/>
             <TextField source="bad"label={"当天bad值"}/>
@@ -196,6 +197,7 @@ export const SelectedStockEdit = (props) => (
             <DisabledInput source="hyper_params"label={"超参数组合"}/>
             <DisabledInput source="code"label={"代码"}/>
             <DisabledInput source="name"label={"名称"}/>
+            <SelectInput source="star" label={"评级"} choices={StarSelect} />
             <SelectInput source="status" label={"状态"} choices={StatusSelect} />
             <ReferenceManyField
                 label="日志"
@@ -237,6 +239,7 @@ export const SelectedStockCreate = (props) => (
             <TextInput source="hyper_params"label={"超参数组合"}/>
             <TextInput source="code"label={"代码"}/>
             <TextInput source="name"label={"名称"}/>
+            <SelectInput source="star" label={"评级"} choices={StarSelect} />
             <TextInput source="good_bad"label={"gb策略值"}/>
             <TextInput source="good"label={"当天good值"}/>
             <TextInput source="bad"label={"当天bad值"}/>

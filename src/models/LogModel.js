@@ -13,6 +13,17 @@ export const LogType = {
   TRANSFER_OUT: "out",//现金转出
   TRANSFER_IN: "in",//现金转入
 };
+//评级
+export const StarSelect = [
+    { id: "6", name: 'A+' },
+    { id: "5", name: 'A' },
+    { id: "4", name: 'A-' },
+    { id: "3", name: 'B+' },
+    { id: "2", name: 'B' },
+    { id: "1", name: 'B-' },
+    { id: "0", name: 'C' },
+    { id: "-1", name: 'D' },
+];
 
 //建议类型
 export const SuggestionType = {
