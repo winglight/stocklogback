@@ -33,7 +33,7 @@ import {
 } from 'react-admin';
 import {showNotification, CreateButton} from 'react-admin';
 import { Link } from 'react-router-dom';
-import { DateInput, TimeInput, DateTimeInput } from 'react-admin-date-inputs';
+import { DateInput, DateTimeInput } from 'react-admin';
 import moment from 'moment';
 import {StrategyCategory, HyperParams, StatusSelect} from '../models/SelectedStockModel'
 import LogModel, {LogSelect, SuggestionSelect, StarSelect} from "../models/LogModel";
@@ -46,6 +46,7 @@ const cardActionStyle = {
 
 const ListPagination = props => <Pagination rowsPerPageOptions={[10, 25, 50, 100]} {...props} />
 const reasonOptionRenderer = reason => `${reason.content} : ${reason.score}`;
+const RowNumbTextField = ({ source, record, index = {} }) => <span>{index}</span>;
 
 const ListActions = ({resource, filters, displayedFilters, filterValues, basePath, showFilter}) => (
     <CardActions style={cardActionStyle}>
@@ -71,7 +72,7 @@ const ListFilter = (props) => (
     <Filter {...props}>
         <SelectInput label="策略" source="strategy" choices={StrategyCategory} filterdefaultvalues={StrategyCategory[0]} alwaysOn/>
         <SelectInput label="超参数" source="hyper_params" choices={HyperParams} filterdefaultvalues="" alwaysOn/>
-        <TextInput label="选股日期" source="date" filterdefaultvalues={moment().format('YYYY-MM-DD')} alwaysOn />
+        <DateInput label="选股日期" source="date" filterdefaultvalues={moment().format('YYYY-MM-DD')} alwaysOn />
         <TextInput label="股票编码" source="code" filterdefaultvalues="" alwaysOn />
         <TextInput label="搜索" source="q" filterdefaultvalues="" alwaysOn />
         <SelectInput label="状态" source="status" choices={StatusSelect} filterdefaultvalues="" alwaysOn/>
@@ -99,13 +100,14 @@ export const SelectedStockList = (props) => (
             <NumberField source="vol50_change"label={"成交量变动"} options={{ maximumFractionDigits: 2 }} />
             <SelectField source="status" label={"状态"} choices={StatusSelect} />
             <DateField source="updatedAt" locales="zh-CN" showTime label="更新时间"/>
-            <ShowActions/>
+            <EditButton/>
+            <ShowButton/>
         </Datagrid>
     </List>
 );
 
 export const LogShow = (props) => (
-    <Show title="l" {...props}>
+    <Show title="l" actions={<ShowActions/>} {...props}>
     <SimpleShowLayout>
     <ReferenceManyField
         label=""
@@ -158,32 +160,7 @@ export const SelectedStockShow = (props) => (
             <TextField source="vol50_change"label={"成交量变动"}/>
             <SelectField source="status" label={"状态"} choices={StatusSelect} />
             <DateField source="updatedAt" locales="zh-CN" showTime label="更新时间"/>
-            <ReferenceManyField
-                label="日志"
-                reference="LogModel"
-                target="selected_stock_id"
-            >
-                <Datagrid>
-                    <TextField source="suggested_low_price" label={"建议较低价格"}/>
-                    <TextField source="suggested_high_price" label={"建议较高价格"}/>
-                    <TextField source="expected_low_price" label={"止损价格"}/>
-                    <TextField source="expected_high_price" label={"止盈价格"}/>
-                    <TextField source="current_price" label={"当前价格"}/>
-                    <SelectField source="suggested_action" label={"推荐动作"} choices={SuggestionSelect} />
-                    <TextField source="star" label={"评级"}/>
-                    <TextField source="score" label={"评分"}/>
-                    <ReferenceArrayField label="理由" reference="ReasonModel" source="reason_ids">
-                        <SingleFieldList>
-                            <ChipField source="content" />
-                        </SingleFieldList>
-                    </ReferenceArrayField>
-                    <SelectField source="logType" label={"LOG类型"} choices={LogSelect} />
-                    <RichTextField source="comment" label={"操作评价"}/>
-                    <BooleanField source="isSuccessful" valueLabelTrue="满意" valueLabelFalse="不满意" label="操作是否满意"/>
-                    <DateField source="commentTime" locales="zh-CN" showTime label="操作评价时间"/>
-                    <EditButton />
-                </Datagrid>
-            </ReferenceManyField>
+            <LogShow {...props}/>
         </SimpleShowLayout>
     </Show>
 );
@@ -200,7 +177,7 @@ export const SelectedStockEdit = (props) => (
             <SelectInput source="star" label={"评级"} choices={StarSelect} />
             <SelectInput source="status" label={"状态"} choices={StatusSelect} />
             <ReferenceManyField
-                label="日志"
+                label=""
                 reference="LogModel"
                 target="selected_stock_id"
                 sort={{ field: 'createdAt', order: 'ASC' }}
@@ -212,14 +189,16 @@ export const SelectedStockEdit = (props) => (
                     <TextField source="expected_high_price" label={"止盈价格"}/>
                     <TextField source="current_price" label={"当前价格"}/>
                     <SelectField source="suggested_action" label={"推荐动作"} choices={SuggestionSelect} />
-                    <TextField source="star" label={"评级"}/>
+                    <SelectField source="star" label={"评级"} choices={StarSelect} />
                     <TextField source="score" label={"评分"}/>
-                    <ReferenceArrayField label="理由" reference="ReasonModel" source="reason_ids">
+                    <ReferenceArrayField label="理由" reference="ReasonModel" source="reason_ids"
+                                         sort={{ field: 'seq', order: 'ASC' }}>
                         <SingleFieldList>
                             <ChipField source="content" />
                         </SingleFieldList>
                     </ReferenceArrayField>
                     <SelectField source="logType" label={"LOG类型"} choices={LogSelect} />
+                    <DateField source="updatedAt" locales="zh-CN" showTime label="更新时间"/>
                     <RichTextField source="comment" label={"操作评价"}/>
                     <BooleanField source="isSuccessful" valueLabelTrue="满意" valueLabelFalse="不满意" label="操作是否满意"/>
                     <DateField source="commentTime" locales="zh-CN" showTime label="操作评价时间"/>

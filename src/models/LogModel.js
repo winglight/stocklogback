@@ -15,14 +15,14 @@ export const LogType = {
 };
 //评级
 export const StarSelect = [
-    { id: "6", name: 'A+' },
-    { id: "5", name: 'A' },
-    { id: "4", name: 'A-' },
-    { id: "3", name: 'B+' },
-    { id: "2", name: 'B' },
-    { id: "1", name: 'B-' },
-    { id: "0", name: 'C' },
-    { id: "-1", name: 'D' },
+    { id: "6", name: 'A+（>5）' },
+    { id: "5", name: 'A（5）' },
+    { id: "4", name: 'A-（4）' },
+    { id: "3", name: 'B+（3）' },
+    { id: "2", name: 'B（2）' },
+    { id: "1", name: 'B-（1）' },
+    { id: "0", name: 'C（0）' },
+    { id: "-1", name: 'D（<0）' },
 ];
 
 //建议类型
