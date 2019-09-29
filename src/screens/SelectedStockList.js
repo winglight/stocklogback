@@ -36,7 +36,8 @@ import { Link } from 'react-router-dom';
 import { DateInput, DateTimeInput } from 'react-admin';
 import moment from 'moment';
 import {StrategyCategory, HyperParams, StatusSelect} from '../models/SelectedStockModel'
-import LogModel, {LogSelect, SuggestionSelect, StarSelect} from "../models/LogModel";
+import LogModel, {LogSelect, SuggestionSelect, StarSelect, LogType} from "../models/LogModel";
+import LogQuickCreateButton from "../component/LogQuickCreateButton"
 
 const cardActionStyle = {
     zIndex: 2,
@@ -57,14 +58,27 @@ const ListActions = ({resource, filters, displayedFilters, filterValues, basePat
 
 const ShowActions = ({ basePath, data, resource }) => (
     <CardActions style={cardActionStyle}>
-        <EditButton/>
-        <ShowButton/>
+        <Button component={Link}
+                to={{
+                    pathname: '/LogModel',
+                    state: { record: { selected_stock_id: data && data.id } },
+                }} color="primary" >日志列表</Button>
         {/* Add your custom actions */}
         <Button component={Link}
                     to={{
                         pathname: '/LogModel/create',
                         state: { record: { selected_stock_id: data && data.id } },
-                    }} color="primary" >添加日志</Button>
+                    }} color="primary" >选股</Button>
+        <LogQuickCreateButton selected_stock_id={data && data.id} logType={LogType.BID} />
+        <LogQuickCreateButton selected_stock_id={data && data.id} logType={LogType.ORDER} />
+        <LogQuickCreateButton selected_stock_id={data && data.id} logType={LogType.HOLD} />
+        <LogQuickCreateButton selected_stock_id={data && data.id} logType={LogType.SELL} />
+    </CardActions>
+);
+
+const EditActions = ({ basePath, data, resource }) => (
+    <CardActions style={cardActionStyle}>
+        <ShowButton basePath={basePath} record={data} />
     </CardActions>
 );
 
@@ -115,7 +129,7 @@ export const LogShow = (props) => (
         target="selected_stock_id"
         sort={{ field: 'createdAt', order: 'ASC' }}
     >
-        <Datagrid>
+        <Datagrid options={{multiSelectable:true}}>
             <TextField source="suggested_low_price" label={"建议较低价格"}/>
             <TextField source="suggested_high_price" label={"建议较高价格"}/>
             <TextField source="expected_low_price" label={"止损价格"}/>
@@ -143,7 +157,7 @@ export const LogShow = (props) => (
 );
 
 export const SelectedStockShow = (props) => (
-    <Show title="选股详情" actions={<ShowActions/>} {...props}>
+    <Show title="选股详情" actions={<ShowButton/>} {...props}>
         <SimpleShowLayout>
             <TextField source="date" label={"选股日期"}/>
             <TextField source="strategy" label={"策略名称"}/>
@@ -166,7 +180,7 @@ export const SelectedStockShow = (props) => (
 );
 
 export const SelectedStockEdit = (props) => (
-    <Edit title={"编辑选中股票"} actions={<ShowActions/>} {...props}>
+    <Edit title={"编辑选中股票"} actions={<EditActions/>} {...props}>
         <SimpleForm>
             <DisabledInput source="id"/>
             <DisabledInput source="date" label={"选股日期"}/>

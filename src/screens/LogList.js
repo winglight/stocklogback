@@ -1,6 +1,7 @@
 import React, {Fragment} from 'react';
 import Button from '@material-ui/core/Button';
 import {
+    GET_MANY,
     List,
     Show,
     SimpleShowLayout,
@@ -37,12 +38,14 @@ import {
     RefreshButton,
     SaveButton,
     Toolbar,
+    FormDataConsumer,
     showNotification
 } from 'react-admin';
-import {SuggestionSelect, LogSelect, StarSelect} from "../models/LogModel";
+import {SuggestionSelect, LogSelect, StarSelect, LogType, SuggestionType} from "../models/LogModel";
 import ReasonQuickCreateButton from "../component/ReasonQuickCreateButton"
 import { DateInput, TimeInput, DateTimeInput } from 'react-admin-date-inputs';
 import RichTextInput from 'ra-input-rich-text';
+import {dataProvider} from "../models/data_provider_config";
 
 const cardActionStyle = {
     zIndex: 2,
@@ -66,16 +69,9 @@ const LogFilter = (props) => (
 );
 
 const ReasonReferenceInput = props => (
-    <Fragment options={{
-        fullWidth: true,
-        fullWidthInput: true,
-    }}>
+    <Fragment>
         <ReferenceArrayInput {...props}>
-            <SelectArrayInput optionText={reasonOptionRenderer}
-                              options={{
-                                  fullWidth: true,
-                                  fullWidthInput: true,
-                              }}
+            <SelectArrayInput optionText={reasonOptionRenderer} options={{ fullWidth: true }}
             />
         </ReferenceArrayInput>
 
@@ -161,9 +157,47 @@ export const LogEdit = (props) => (
             <NumberInput source="expected_high_price" label={"止盈价格"}/>
             <NumberInput source="current_price" label={"当前价格"}/>
             <NumberInput source="current_position" label={"当前仓位"}/>
-            <SelectInput source="suggested_action" label={"推荐动作"} choices={SuggestionSelect} />
-            <SelectInput source="star" label={"评级"} choices={StarSelect} />
-            <NumberInput source="score" label={"评分"}/>
+            <FormDataConsumer>
+                {({ formData, ...rest }) => {
+                    // console.log("formData.reason_ids: " + JSON.stringify(formData.reason_ids));
+                    dataProvider(GET_MANY, 'ReasonModel', { ids: formData.reason_ids})
+                        .then((list) => {
+                            // console.log("GET_LIST: " + JSON.stringify(list));
+                            let robjs = new ReasonCollection(...list.data);
+                            let count = robjs.sum("score");
+                            // console.log("count: " + count);
+                            formData.score = count;
+
+                            let value = StarSelect.find(x => ((x.id === count.toString()) || (x.id === "6" && count > 5) || (x.id === "-1" && count < 0)));
+                            // console.log("value: " + value);
+                            let star = value?value.id: "";
+                            // console.log("star: " + star);
+                            formData.star = star;
+
+                            if (!formData.logType || formData.logType === LogType.CANDIDATE || formData.logType === LogType.UNCANDIDATE) {
+                                if (count >= 3) {
+                                    formData.suggested_action = SuggestionType.BUY;
+                                    formData.logType = LogType.CANDIDATE;
+                                } else {
+                                    formData.suggested_action = SuggestionType.NONE;
+                                    formData.logType = LogType.UNCANDIDATE;
+                                }
+                            }
+                        })
+                        .catch((e) => {
+                            showNotification('Error: get reasons failed', 'warning')
+                        });
+                    return (
+                        <Fragment>
+                            <SelectInput source="suggested_action" label={"推荐动作"} choices={SuggestionSelect} />
+                            <SelectInput source="star" label={"评级"}
+                                         choices={StarSelect}/>
+                            <NumberInput source="score" label={"评分"}/>
+                        </Fragment>
+                    )
+                }
+                }
+            </FormDataConsumer>
             <ReasonReferenceInput label="理由" reference="ReasonModel" source="reason_ids" perPage={10000}
                                  sort={{ field: 'seq', order: 'ASC' }}/>
             <SelectInput source="logType" label={"LOG类型"} choices={LogSelect} />
@@ -174,12 +208,15 @@ export const LogEdit = (props) => (
     </Edit>
 );
 
+class ReasonCollection extends Array {
+    sum(key) {
+        return this.reduce((a, b) => a + (b[key] || 0), 0);
+    }
+}
+
 export const LogCreate = (props) => (
     <Create {...props}>
-        <SimpleForm redirect={redirect} options={{
-            fullWidth: true,
-            fullWidthInput: true,
-        }}>
+        <SimpleForm redirect={redirect}>
             <DisabledInput source="id" />
             <ReferenceInput label="待选股" source="selected_stock_id" reference="SelectedStockModel">
                 <SelectInput optionText={selectStockOptionRenderer} />
@@ -190,14 +227,50 @@ export const LogCreate = (props) => (
             <NumberInput source="expected_high_price" label={"止盈价格"}/>
             <NumberInput source="current_price" label={"当前价格"}/>
             <NumberInput source="current_position" label={"当前仓位"}/>
-            <SelectInput source="suggested_action" label={"推荐动作"} choices={SuggestionSelect} />
-            <SelectInput source="star" label={"评级"} choices={StarSelect} />
-            <NumberInput source="score" label={"评分"}/>
+
+            <FormDataConsumer>
+                {({ formData, ...rest }) => {
+                    // console.log("formData.reason_ids: " + JSON.stringify(formData.reason_ids));
+                    dataProvider(GET_MANY, 'ReasonModel', { ids: formData.reason_ids})
+                        .then((list) => {
+                            // console.log("GET_LIST: " + JSON.stringify(list));
+                            let robjs = new ReasonCollection(...list.data);
+                            let count = robjs.sum("score");
+                            // console.log("count: " + count);
+                            formData.score = count;
+
+                            let value = StarSelect.find(x => ((x.id === count.toString()) || (x.id === "6" && count > 5) || (x.id === "-1" && count < 0)));
+                            // console.log("value: " + value);
+                            let star = value?value.id: "";
+                            // console.log("star: " + star);
+                            formData.star = star;
+
+                            if (!formData.logType || formData.logType === LogType.CANDIDATE || formData.logType === LogType.UNCANDIDATE) {
+                                if (count >= 3) {
+                                    formData.suggested_action = SuggestionType.BUY;
+                                    formData.logType = LogType.CANDIDATE;
+                                } else {
+                                    formData.suggested_action = SuggestionType.NONE;
+                                    formData.logType = LogType.UNCANDIDATE;
+                                }
+                            }
+                        })
+                        .catch((e) => {
+                            showNotification('Error: get reasons failed', 'warning')
+                        });
+                    return (
+                        <Fragment>
+                            <SelectInput source="suggested_action" label={"推荐动作"} choices={SuggestionSelect} />
+                            <SelectInput source="star" label={"评级"}
+                                         choices={StarSelect}/>
+                            <NumberInput source="score" label={"评分"}/>
+                        </Fragment>
+                    )
+                }
+                }
+            </FormDataConsumer>
             <ReasonReferenceInput label="理由" reference="ReasonModel" source="reason_ids" perPage={10000}
-                                 sort={{ field: 'seq', order: 'ASC' }} options={{
-                fullWidth: true,
-                fullWidthInput: true,
-            }}/>
+                                 sort={{ field: 'seq', order: 'ASC' }} />
             <SelectInput source="logType" label={"LOG类型"} choices={LogSelect} />
             <RichTextInput source="comment" label={"操作评价"}/>
             <BooleanInput source="isSuccessful" valueLabelTrue="满意" valueLabelFalse="不满意" label="操作是否满意"/>

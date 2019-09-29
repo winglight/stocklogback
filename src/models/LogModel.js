@@ -27,7 +27,7 @@ export const StarSelect = [
 
 //建议类型
 export const SuggestionType = {
-  NONE: "none",//买入
+  NONE: "none",//无
   BUY: "buy",//买入
   HOLD: "hold",//持有
   SELL: "sell",//卖出
