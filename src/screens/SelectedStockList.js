@@ -23,21 +23,25 @@ import {
     EditButton,
     DisabledInput,
     SelectInput,
+    FormDataConsumer,
     SimpleForm,
     Pagination,
     CardActions,
     TextInput,
     ShowButton,
     DeleteButton,
-    RefreshButton
+    RefreshButton,
+    GET_MANY
 } from 'react-admin';
 import {showNotification, CreateButton} from 'react-admin';
 import { Link } from 'react-router-dom';
 import { DateInput, DateTimeInput } from 'react-admin';
 import moment from 'moment';
-import {StrategyCategory, HyperParams, StatusSelect} from '../models/SelectedStockModel'
-import LogModel, {LogSelect, SuggestionSelect, StarSelect, LogType} from "../models/LogModel";
+import {StrategyCategory, HyperParams, StatusSelect, Status} from '../models/SelectedStockModel'
+import LogModel, {LogSelect, SuggestionSelect, StarSelect, LogType, SuggestionType} from "../models/LogModel";
 import LogQuickCreateButton from "../component/LogQuickCreateButton"
+import LogQuickEditButton from "../component/LogQuickEditButton"
+import {dataProvider} from "../models/data_provider_config";
 
 const cardActionStyle = {
     zIndex: 2,
@@ -47,7 +51,27 @@ const cardActionStyle = {
 
 const ListPagination = props => <Pagination rowsPerPageOptions={[10, 25, 50, 100]} {...props} />
 const reasonOptionRenderer = reason => `${reason.content} : ${reason.score}`;
-const RowNumbTextField = ({ source, record, index = {} }) => <span>{index}</span>;
+const AxisPriceField = ({ source, record, ...props  }) => {
+    let axisPrice = (record.high + record.low + record.close)/3;
+    let resistPrice1 = 2 * axisPrice - record.low;
+    let resistPrice2 = axisPrice + record.high - record.low;
+    let resistPrice3 = resistPrice1 + record.high - record.low;
+    let supportPrice1 = 2 * axisPrice - record.high;
+    let supportPrice2 = axisPrice - (record.high - record.low);
+    let supportPrice3 = supportPrice1 - (record.high - record.low);
+
+    return (
+        <ul>
+             <li key="resistPrice3">{"阻力3：" + resistPrice3.toFixed(2)}</li>
+             <li key="resistPrice2">{"阻力2：" + resistPrice2.toFixed(2)}</li>
+             <li key="resistPrice1">{"阻力1：" + resistPrice1.toFixed(2)}</li>
+             <li key="axisPrice">{"轴 心 ：" + axisPrice.toFixed(2)}</li>
+             <li key="supportPrice1">{"支撑1：" + supportPrice1.toFixed(2)}</li>
+             <li key="supportPrice2">{"支撑2：" + supportPrice2.toFixed(2)}</li>
+             <li key="supportPrice3">{"支撑3：" + supportPrice3.toFixed(2)}</li>
+        </ul>
+    );
+}
 
 const ListActions = ({resource, filters, displayedFilters, filterValues, basePath, showFilter}) => (
     <CardActions style={cardActionStyle}>
@@ -96,8 +120,8 @@ const ListFilter = (props) => (
 export const SelectedStockList = (props) => (
     <List {...props} title={"选股列表"} filters={<ListFilter />} sort={{field: 'date', order: 'DESC'}} perPage={25} pagination={<ListPagination />}
           actions={<ListActions/>}>
-        <Datagrid options={{multiSelectable:true}} bodyOptions={{ stripedRows: true, showRowHover: true , displayRowCheckbox:true}}
-                  headerOptions={{adjustForCheckbox:true}} rowOptions={{selectable: true}} rowClick="expand" expand={<LogShow />}>
+        <Datagrid options={{multiSelectable:true}} bodyoptions={{ stripedRows: true, showRowHover: true , displayRowCheckbox:true}}
+                  headeroptions={{adjustForCheckbox:true}} rowoptions={{selectable: true}} rowClick="expand" expand={<LogShow />}>
             {/*<TextField source="id"/>*/}
             <TextField source="date" label={"选股日期"}/>
             <TextField source="code"label={"代码"}/>
@@ -106,14 +130,12 @@ export const SelectedStockList = (props) => (
             <TextField source="strategy" label={"策略名称"}/>
             <TextField source="hyper_params"label={"超参数组合"}/>
             <NumberField source="good_bad"label={"gb策略值"}/>
-            <NumberField source="good"label={"当天good值"}/>
-            <NumberField source="bad"label={"当天bad值"}/>
             <NumberField source="volatility"label={"波动率"} options={{ style: 'percent', maximumFractionDigits: 2 }} />
             <NumberField source="volat_price"label={"波动价格"} options={{ style: 'currency', currency: 'CNY' }}/>
-            <NumberField source="totalCapital"label={"流通市值"} options={{ style: 'currency', currency: 'CNY' }}/>
+            <AxisPriceField label={"轴心价格"}/>
             <NumberField source="vol50_change"label={"成交量变动"} options={{ maximumFractionDigits: 2 }} />
+            <NumberField source="totalCapital"label={"流通市值"} options={{ style: 'currency', currency: 'CNY' }}/>
             <SelectField source="status" label={"状态"} choices={StatusSelect} />
-            <DateField source="updatedAt" locales="zh-CN" showTime label="更新时间"/>
             <EditButton/>
             <ShowButton/>
         </Datagrid>
@@ -149,6 +171,7 @@ export const LogShow = (props) => (
             <RichTextField source="comment" label={"操作评价"}/>
             <BooleanField source="isSuccessful" valueLabelTrue="满意" valueLabelFalse="不满意" label="操作是否满意"/>
             <DateField source="commentTime" locales="zh-CN" showTime label="操作评价时间"/>
+            <LogQuickEditButton />
             <EditButton />
         </Datagrid>
     </ReferenceManyField>
@@ -189,7 +212,18 @@ export const SelectedStockEdit = (props) => (
             <DisabledInput source="code"label={"代码"}/>
             <DisabledInput source="name"label={"名称"}/>
             <SelectInput source="star" label={"评级"} choices={StarSelect} />
-            <SelectInput source="status" label={"状态"} choices={StatusSelect} />
+            <FormDataConsumer>
+                {({ formData, ...rest }) => {
+                    if (parseInt(formData.star) >= 3 && formData.status === Status.SELECTED) {
+                        formData.status = Status.CANDIDATED;
+                    }
+                    return (
+                        <SelectInput source="status" label={"状态"} choices={StatusSelect} />
+                    )
+                }
+                }
+            </FormDataConsumer>
+
             <ReferenceManyField
                 label=""
                 reference="LogModel"
