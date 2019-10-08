@@ -11,7 +11,12 @@ export class PositionModel extends Parse.Object {
         this.totalBalance;//总资产
         this.cashBalance;//现金资产
         this.marketBalance;//市值资产
-        this.positionLog=[];//持有log
+        this.summaryType;//总结类型
+        this.summaryContent;//总结内容
+        this.summaryStartDate;//总结起始日期
+        this.summaryEndDate;//总结结束日期
+        this.holdStocks=[];//持有Stocks
+        this.holdLogs=[];//持有Logs
     }
 
     static findAll() {

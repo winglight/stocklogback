@@ -18,13 +18,3 @@ parse-dashboard --appId stocklog --masterKey dkElkfdjiEOij843lKD --serverURL "ht
 parse-dashboard --appId stocklog --masterKey dkElkfdjiEOij843lKD --serverURL "http://www.jyrz.xyz/parse" --appName stocklog
 parse-dashboard --appId stocklog --masterKey dkElkfdjiEOij843lKD --serverURL "http://stocklogs.herokuapp.com/parse" --appName stocklog
 ```
-
-{
-  "server":"45.33.108.61",
-  "server_port":36785,
-  "local_address": "127.0.0.1",
-  "local_port":1080,
-  "password":"43DUnYHj6b6ZSp65TRL7sVCA",
-  "timeout":300,
-  "method":"aes-256-cfb"
-}
