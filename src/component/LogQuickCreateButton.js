@@ -72,12 +72,12 @@ class LogQuickCreateButton extends Component {
 
         // As we want to know when the new post has been created in order to close the modal, we use the
         // dataProvider directly
-        let logObj = new LogModel();
-        logObj.selected_stock_id = selected_stock_id;
-        logObj.current_price = values.current_price;
-        logObj.current_position = values.current_position;
-        logObj.reason_ids = values.reason_ids;
-        logObj.logType = values.logType;
+        // let logObj = new LogModel();
+        // logObj.selected_stock_id = selected_stock_id;
+        // logObj.current_price = values.current_price;
+        // logObj.current_position = values.current_position;
+        // logObj.reason_ids = values.reason_ids;
+        // logObj.logType = values.logType;
 
         values.selected_stock_id = selected_stock_id;
 
@@ -133,6 +133,10 @@ class LogQuickCreateButton extends Component {
                             toolbar={null}
                         >
                             <NumberInput source="current_price" label={"当前价格"}/>
+                            <NumberInput source="expected_high_price" label={"止盈价格"}/>
+                            <NumberInput source="expected_low_price" label={"止损价格"}/>
+                            <NumberInput source="suggested_high_price" label={"建议较高价格"}/>
+                            <NumberInput source="suggested_low_price" label={"建议较低价格"}/>
                             <NumberInput source="current_position" label={"当前仓位"}/>
                             <ReferenceArrayInput label="理由" reference="ReasonModel" source="reason_ids" perPage={10000}
                                                  sort={{ field: 'seq', order: 'ASC' }} filter={{ content: logTypeName }}>

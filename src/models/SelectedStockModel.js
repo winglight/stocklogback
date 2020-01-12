@@ -15,22 +15,21 @@ export const StatusSelect = [
     { id: "3", name: '清仓' },
 ];
 export const StrategyCategory = [
+    { id: 'con_good', name: '连续good策略' },
+    { id: 'con_good_3', name: '连续good=3策略' },
     { id: 'good_bad', name: 'gb策略' },
     { id: 'gb_volat_false', name: '波动率正序' },
     { id: 'gb_volat_true', name: '波动率反序' },
 ];
 export const HyperParams = [
-    { id: "5,2,7,50,4", name:"5,2,7,50,4"},
-    { id: "5,1,7,50,5", name:"5,1,7,50,5"},
-    { id: "5,3,6,30,6", name:"5,3,6,30,6"},
-    { id: "5,1,6,50,5", name:"5,1,6,50,5"},
-    { id: "10,3,5,40,6", name:"10,3,5,40,6"},
-    { id: "5,1,5,50,5", name:"5,1,5,50,5"},
-    { id: "5,2,7,30,6", name:"5,2,7,30,6"},
-    { id: "5,3,7,40,6", name:"5,3,7,40,6"},
-    { id: "5,3,7,30,5", name:"5,3,7,30,5"},
-    { id: "5,3,5,30,4", name:"5,3,5,30,4"},
-    { id: "5,3,6,40,5", name:"5,3,6,40,5"},
+
+    { id: "10,3,6,50,4", name:"10,3,6,50,4"},
+    { id: "10,3,7,50,4", name:"10,3,7,50,4"},
+    { id: "5,1,6,40,6", name:"5,1,6,40,6"},
+    { id: "5,2,6,40,6", name:"5,2,6,40,6"},
+    { id: "10,2,6,40,4", name:"10,2,6,40,4"},
+    { id: "10,1,5,30,4", name:"10,1,5,30,4"},
+    { id: "5,1,7,30,6", name:"5,1,7,30,6"},
 ];
 
 export class SelectedStockModel extends Parse.Object {

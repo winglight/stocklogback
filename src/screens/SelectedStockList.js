@@ -49,6 +49,8 @@ const cardActionStyle = {
     float: 'right',
 };
 
+const StrategyField = ({ source, record = {} }) => <span>{StrategyCategory.find(x => x.id === record[source]).name}</span>;
+
 const ListPagination = props => <Pagination rowsPerPageOptions={[10, 25, 50, 100]} {...props} />
 const reasonOptionRenderer = reason => `${reason.content} : ${reason.score}`;
 const AxisPriceField = ({ source, record, ...props  }) => {
@@ -60,8 +62,17 @@ const AxisPriceField = ({ source, record, ...props  }) => {
     let supportPrice2 = axisPrice - (record.high - record.low);
     let supportPrice3 = supportPrice1 - (record.high - record.low);
 
+    let upPrice = Math.max((1 + record.volatility*2) * record.close, resistPrice2);
+    let downPrice = Math.max((1 - record.volatility) * record.close, supportPrice1);
+    let suggestBuyPrice1 = Math.min((1 - record.volatility) * record.close, supportPrice2);
+    let suggestBuyPrice2 = Math.min((1 + record.volatility) * record.close, resistPrice1);
+
     return (
         <ul>
+             <li key="upPrice">{"止盈价格：" + upPrice.toFixed(2)}</li>
+             <li key="downPrice">{"止损价格：" + downPrice.toFixed(2)}</li>
+             <li key="suggestBuyPrice2">{"建议买入价格(高)：" + suggestBuyPrice2.toFixed(2)}</li>
+             <li key="suggestBuyPrice1">{"建议买入价格(低)：" + suggestBuyPrice1.toFixed(2)}</li>
              <li key="resistPrice3">{"阻力3：" + resistPrice3.toFixed(2)}</li>
              <li key="resistPrice2">{"阻力2：" + resistPrice2.toFixed(2)}</li>
              <li key="resistPrice1">{"阻力1：" + resistPrice1.toFixed(2)}</li>
@@ -94,6 +105,7 @@ const ShowActions = ({ basePath, data, resource }) => (
                         state: { record: { selected_stock_id: data && data.id } },
                     }} color="primary" >选股</Button>
         <LogQuickCreateButton selected_stock_id={data && data.id} logType={LogType.BID} />
+        <LogQuickCreateButton selected_stock_id={data && data.id} logType={LogType.PRICING} />
         <LogQuickCreateButton selected_stock_id={data && data.id} logType={LogType.ORDER} />
         <LogQuickCreateButton selected_stock_id={data && data.id} logType={LogType.HOLD} />
         <LogQuickCreateButton selected_stock_id={data && data.id} logType={LogType.SELL} />
@@ -127,13 +139,15 @@ export const SelectedStockList = (props) => (
             <TextField source="code"label={"代码"}/>
             <TextField source="name"label={"名称"}/>
             <SelectField source="star" label={"评级"} choices={StarSelect} />
-            <TextField source="strategy" label={"策略名称"}/>
+            <StrategyField source="strategy" label={"策略名称"}/>
             <TextField source="hyper_params"label={"超参数组合"}/>
             <NumberField source="good_bad"label={"gb策略值"}/>
             <NumberField source="volatility"label={"波动率"} options={{ style: 'percent', maximumFractionDigits: 2 }} />
             <NumberField source="volat_price"label={"波动价格"} options={{ style: 'currency', currency: 'CNY' }}/>
             <AxisPriceField label={"轴心价格"}/>
             <NumberField source="vol50_change"label={"成交量变动"} options={{ maximumFractionDigits: 2 }} />
+            <NumberField source="close_slope"label={"close斜率"} options={{ maximumFractionDigits: 2 }} />
+            <NumberField source="open_slope"label={"open斜率"} options={{ maximumFractionDigits: 2 }} />
             <NumberField source="totalCapital"label={"流通市值"} options={{ style: 'currency', currency: 'CNY' }}/>
             <SelectField source="status" label={"状态"} choices={StatusSelect} />
             <EditButton/>
@@ -152,10 +166,10 @@ export const LogShow = (props) => (
         sort={{ field: 'createdAt', order: 'ASC' }}
     >
         <Datagrid options={{multiSelectable:true}}>
-            <TextField source="suggested_low_price" label={"建议较低价格"}/>
-            <TextField source="suggested_high_price" label={"建议较高价格"}/>
-            <TextField source="expected_low_price" label={"止损价格"}/>
             <TextField source="expected_high_price" label={"止盈价格"}/>
+            <TextField source="expected_low_price" label={"止损价格"}/>
+            <TextField source="suggested_high_price" label={"建议较高价格"}/>
+            <TextField source="suggested_low_price" label={"建议较低价格"}/>
             <TextField source="current_price" label={"当前价格"}/>
             <SelectField source="suggested_action" label={"推荐动作"} choices={SuggestionSelect} />
             <SelectField source="star" label={"评级"} choices={StarSelect} />
@@ -171,7 +185,7 @@ export const LogShow = (props) => (
             <RichTextField source="comment" label={"操作评价"}/>
             <BooleanField source="isSuccessful" valueLabelTrue="满意" valueLabelFalse="不满意" label="操作是否满意"/>
             <DateField source="commentTime" locales="zh-CN" showTime label="操作评价时间"/>
-            <LogQuickEditButton />
+            <LogQuickEditButton  />
             <EditButton />
         </Datagrid>
     </ReferenceManyField>

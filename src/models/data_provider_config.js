@@ -1,7 +1,7 @@
 import {ParseAuth, ParseClient} from "ra-data-parse";
 
 const parseConfig = {
-    URL: 'http://www.jyrz.xyz/parse',
+    URL: 'http://localhost:1337/parse',
     JAVASCRIPT_KEY: '',
     APP_ID: 'stocklog'
 }

@@ -49,11 +49,11 @@ class LogQuickEditButton extends Component {
     };
 
     handleSaveClick = () => {
-        const { submit } = this.props;
+        const { submit, record } = this.props;
 
         // Trigger a submit of our custom quick create form
         // This is needed because our modal action buttons are oustide the form
-        submit('log-quick-edit');
+        submit(`log-quick_edit_${record.id}`);
     };
 
     handleSubmit = values => {
@@ -82,13 +82,13 @@ class LogQuickEditButton extends Component {
             .then(({ data }) => {
                 // Refresh the choices of the ReferenceInput to ensure our newly created post
                 // always appear, even after selecting another post
-                // crudGetMatching(
-                //     'LogModel',
-                //     '',
-                //     { page: 1, perPage: 100 },
-                //     { field: 'content', order: 'ASC' },
-                //     {id: values.id}
-                // );
+                crudGetMatching(
+                    'LogModel',
+                    '',
+                    { page: 1, perPage: 100 },
+                    { field: 'content', order: 'ASC' },
+                    {id: data.id}
+                );
 
                 // Update the main react-admin form (in this case, the comments creation form)
                 // change(REDUX_FORM_NAME, 'post_id', data.id);
@@ -117,12 +117,14 @@ class LogQuickEditButton extends Component {
                     open={showDialog}
                     onClose={this.handleCloseClick}
                     aria-label="修改价格"
+                    key={record.id}
                 >
                     <DialogTitle>{logType + " - 修改价格"}</DialogTitle>
                     <DialogContent>
                         <SimpleForm
+                            key={record.id}
                             // We override the redux-form name to avoid collision with the react-admin main form
-                            form="log-quick-edit"
+                            form={`log-quick_edit_${record.id}`}
                             resource="LogModel"
                             // We override the redux-form onSubmit prop to handle the submission ourselves
                             onSubmit={this.handleSubmit}

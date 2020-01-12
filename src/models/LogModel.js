@@ -7,6 +7,7 @@ export const LogType = {
   UNCANDIDATE: "uncandidate",//未选中
   CANDIDATE: "candidate",//选中
   BID: "bid",//竞价
+  PRICING: "price",//更新止盈止损价格
   ORDER: "order",//下单
   HOLD: "hold",//持有
   SELL: "sell",//卖出
@@ -37,6 +38,7 @@ export const LogSelect = [
     { id: "uncandidate", name: '未选中' },
     { id: "candidate", name: '选中' },
     { id: "bid", name: '竞价' },
+    { id: "price", name: '更新止盈止损价格' },
     { id: "order", name: '下单' },
     { id: "hold", name: '持有' },
     { id: "sell", name: '卖出' },
