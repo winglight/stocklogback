@@ -20,7 +20,6 @@ import {
     Create,
     Datagrid,
     EditButton,
-    DisabledInput,
     SelectInput,
     SimpleForm,
     TextInput,
@@ -98,7 +97,7 @@ export const ReasonShow = (props) => (
 export const ReasonEdit = (props) => (
     <Edit title="日志编辑" {...props}>
         <SimpleForm toolbar={<CreateToolbar />} redirect="List">
-            <DisabledInput source="id"/>
+            <TextField source="id"/>
             <NumberInput source="seq" label={"顺序"} step={10}/>
             <TextInput source="content" label={"理由"}/>
             <NumberInput source="score" label={"分数"}/>
@@ -109,7 +108,7 @@ export const ReasonEdit = (props) => (
 export const ReasonCreate = (props) => (
     <Create {...props}>
         <SimpleForm toolbar={<CreateToolbar />} redirect="List">
-            <DisabledInput source="id" />
+            <TextField source="id" />
             <NumberInput source="seq" label={"顺序"} step={10}/>
             <TextInput source="content" label={"理由"}/>
             <NumberInput source="score" label={"分数"}/>

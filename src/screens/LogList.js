@@ -24,11 +24,11 @@ import {
     Create,
     Datagrid,
     EditButton,
-    DisabledInput,
     SelectInput,
     SimpleForm,
     TextInput,
     LongTextInput,
+    DateTimeInput,
     NumberInput,
     ReferenceArrayField,
     CardActions,
@@ -43,7 +43,6 @@ import {
 } from 'react-admin';
 import {SuggestionSelect, LogSelect, StarSelect, LogType, SuggestionType} from "../models/LogModel";
 import ReasonQuickCreateButton from "../component/ReasonQuickCreateButton"
-import { DateInput, TimeInput, DateTimeInput } from 'react-admin-date-inputs';
 import RichTextInput from 'ra-input-rich-text';
 import {dataProvider} from "../models/data_provider_config";
 
@@ -147,7 +146,7 @@ export const LogShow = (props) => (
 export const LogEdit = (props) => (
     <Edit title="日志编辑" {...props}>
         <SimpleForm redirect={redirect}>
-            <DisabledInput source="id"/>
+            <TextField source="id"/>
             <ReferenceInput label="待选股" source="selected_stock_id" reference="SelectedStockModel">
                 <SelectInput optionText={selectStockOptionRenderer} />
             </ReferenceInput>
@@ -203,7 +202,7 @@ export const LogEdit = (props) => (
             <SelectInput source="logType" label={"LOG类型"} choices={LogSelect} />
             <RichTextInput source="comment" label={"操作评价"}/>
             <BooleanInput source="isSuccessful" valueLabelTrue="满意" valueLabelFalse="不满意" label="操作是否满意"/>
-            <DateTimeInput source="commentTime" label="操作评价时间" options={{ format: 'YYYY-MM-dd, HH:mm:ss', ampm: false, clearable: true }} />
+            <TextField source="commentTime" label="操作评价时间" options={{ format: 'YYYY-MM-dd, HH:mm:ss', ampm: false, clearable: true }} />
         </SimpleForm>
     </Edit>
 );
@@ -217,7 +216,7 @@ class ReasonCollection extends Array {
 export const LogCreate = (props) => (
     <Create {...props}>
         <SimpleForm redirect={redirect}>
-            <DisabledInput source="id" />
+            <TextField source="id" />
             <ReferenceInput label="待选股" source="selected_stock_id" reference="SelectedStockModel">
                 <SelectInput optionText={selectStockOptionRenderer} />
             </ReferenceInput>
@@ -246,7 +245,7 @@ export const LogCreate = (props) => (
                             formData.star = star;
 
                             if (!formData.logType || formData.logType === LogType.CANDIDATE || formData.logType === LogType.UNCANDIDATE) {
-                                if (count >= 3) {
+                                if (count > 3) {
                                     formData.suggested_action = SuggestionType.BUY;
                                     formData.logType = LogType.CANDIDATE;
                                 } else {
@@ -274,7 +273,7 @@ export const LogCreate = (props) => (
             <SelectInput source="logType" label={"LOG类型"} choices={LogSelect} />
             <RichTextInput source="comment" label={"操作评价"}/>
             <BooleanInput source="isSuccessful" valueLabelTrue="满意" valueLabelFalse="不满意" label="操作是否满意"/>
-            <DateTimeInput source="commentTime" label="操作评价时间" options={{ format: 'YYYY-MM-dd, HH:mm:ss', ampm: false, clearable: true }} />
+            <TextField source="commentTime" label="操作评价时间" options={{ format: 'YYYY-MM-dd, HH:mm:ss', ampm: false, clearable: true }} />
         </SimpleForm>
     </Create>
 );

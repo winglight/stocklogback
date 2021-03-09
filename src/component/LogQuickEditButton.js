@@ -132,11 +132,12 @@ class LogQuickEditButton extends Component {
                             toolbar={null}
                             {...this.props}
                         >
-                            <NumberInput source="suggested_low_price" label={"建议较低价格"}/>
-                            <NumberInput source="suggested_high_price" label={"建议较高价格"}/>
-                            <NumberInput source="expected_low_price" label={"止损价格"}/>
-                            <NumberInput source="expected_high_price" label={"止盈价格"}/>
                             <NumberInput source="current_price" label={"当前价格"}/>
+                            <NumberInput source="expected_high_price" label={"止盈价格"}/>
+                            <NumberInput source="expected_low_price" label={"止损价格"}/>
+                            <NumberInput source="suggested_high_price" label={"建议买入价格(高)"}/>
+                            <NumberInput source="suggested_low_price" label={"建议买入价格(低)"}/>
+
                         </SimpleForm>
                     </DialogContent>
                     <DialogActions>

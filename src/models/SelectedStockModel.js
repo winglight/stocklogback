@@ -15,22 +15,45 @@ export const StatusSelect = [
     { id: "3", name: '清仓' },
 ];
 export const StrategyCategory = [
-    { id: 'con_good', name: '连续good策略' },
-    { id: 'con_good_3', name: '连续good=3策略' },
+    { id: 'qa_gb_ranjl', name: 'QA版GB价量策略' },
     { id: 'good_bad', name: 'gb策略' },
-    { id: 'gb_volat_false', name: '波动率正序' },
     { id: 'gb_volat_true', name: '波动率反序' },
+    { id: 'gb_volat_false', name: '波动率正序' },
+    { id: 'con_gb_prev_3', name: '连续good=3策略(前)' },
+    { id: 'con_gb_3', name: '连续good=3策略' },
+    { id: 'con_good', name: '连续good策略' },
+    { id: 'ema8_ema20_cross', name: 'EMA突破策略' },
+    { id: '0', name: '---------' },
+    { id: 'gb_volat_false', name: '波动率正序' },
 ];
 export const HyperParams = [
-
-    { id: "10,3,6,50,4", name:"10,3,6,50,4"},
-    { id: "10,3,7,50,4", name:"10,3,7,50,4"},
-    { id: "5,1,6,40,6", name:"5,1,6,40,6"},
-    { id: "5,2,6,40,6", name:"5,2,6,40,6"},
-    { id: "10,2,6,40,4", name:"10,2,6,40,4"},
-    { id: "10,1,5,30,4", name:"10,1,5,30,4"},
-    { id: "5,1,7,30,6", name:"5,1,7,30,6"},
+    { id: "1,4,6,90,3", name:"1,4,6,90,3"},
+    { id: "5,3,6,40,5", name:"5,3,6,40,5"},
+    { id: "10,3,5,40,5", name:"10,3,5,40,5"},
+    { id: "5,3,7,40,5", name:"5,3,7,40,5"},
+    { id: "10,2,7,40,4", name:"10,2,7,40,4"},
+    { id: "10,2,6,40,5", name:"10,2,6,40,5"},
+    {id: "0", name:"----------"},
+    { id: "5,1,5,50,4", name:"5,1,5,50,4"},
+    { id: "7,1,5,50,4", name:"7,1,5,50,4"},
+    { id: "7,2,5,60,4", name:"7,2,5,60,4"},
 ];
+// export const StrategyCategory = [
+//     { id: 'gb_volat_false', name: '波动率正序' },
+//     { id: 'good_bad', name: 'gb策略' },
+//     { id: 'con_gb_3', name: '连续good=3策略' },
+//     { id: 'gb_volat_true', name: '波动率反序' },
+//     { id: 'con_good', name: '连续good策略' },
+// ];
+// export const HyperParams = [
+//
+//     { id: "5,1,5,50,4", name:"5,1,5,50,4"},
+//     { id: "5,1,6,50,4", name:"5,1,6,50,4"},
+//     { id: "5,2,7,40,5", name:"5,2,7,40,5"},
+//     { id: "10,2,6,40,4", name:"10,2,6,40,4"},
+//     { id: "10,2,7,50,4", name:"10,2,7,50,4"},
+//     { id: "10,2,7,40,4", name:"10,2,7,40,4"},
+// ];
 
 export class SelectedStockModel extends Parse.Object {
     constructor() {

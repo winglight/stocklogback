@@ -7,11 +7,12 @@ import { SelectedStockList, SelectedStockShow, SelectedStockEdit, SelectedStockC
 import { LogList, LogShow, LogEdit, LogCreate } from './screens/LogList';
 import { ReasonList, ReasonShow, ReasonEdit, ReasonCreate } from './screens/ReasonList';
 import {dataProvider, authProvider} from "./models/data_provider_config";
-
+import Dashboard from './screens/dashboard/Dashboard';
 
 const App = () => (
     <Admin
         title="Stock Log - 交易记录"
+        dashboard={Dashboard}
         dataProvider={dataProvider}
         authProvider={authProvider}
     >

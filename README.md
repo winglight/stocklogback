@@ -18,3 +18,14 @@ parse-dashboard --appId stocklog --masterKey dkElkfdjiEOij843lKD --serverURL "ht
 parse-dashboard --appId stocklog --masterKey dkElkfdjiEOij843lKD --serverURL "http://www.jyrz.xyz/parse" --appName stocklog
 parse-dashboard --appId stocklog --masterKey dkElkfdjiEOij843lKD --serverURL "http://stocklogs.herokuapp.com/parse" --appName stocklog
 ```
+
+version: "2"
+services:
+  jellyfin:
+    image: jellyfin/jellyfin
+    user: 1000:1000
+    network_mode: "host"
+    volumes:
+      - /volume2/backup/mdisk/work/jellyfish/config:/config
+      - /volume2/backup/mdisk/work/jellyfish/cache:/cache
+      - /volume2/video:/media

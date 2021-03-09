@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import Button from '@material-ui/core/Button';
 import {
     List,
@@ -21,7 +21,6 @@ import {
     Create,
     Datagrid,
     EditButton,
-    DisabledInput,
     SelectInput,
     FormDataConsumer,
     SimpleForm,
@@ -30,6 +29,7 @@ import {
     TextInput,
     ShowButton,
     DeleteButton,
+    BulkDeleteButton,
     RefreshButton,
     GET_MANY
 } from 'react-admin';
@@ -41,6 +41,7 @@ import {StrategyCategory, HyperParams, StatusSelect, Status} from '../models/Sel
 import LogModel, {LogSelect, SuggestionSelect, StarSelect, LogType, SuggestionType} from "../models/LogModel";
 import LogQuickCreateButton from "../component/LogQuickCreateButton"
 import LogQuickEditButton from "../component/LogQuickEditButton"
+import AddToGroupButton from "../component/AddToGroupButton"
 import {dataProvider} from "../models/data_provider_config";
 
 const cardActionStyle = {
@@ -49,7 +50,16 @@ const cardActionStyle = {
     float: 'right',
 };
 
-const StrategyField = ({ source, record = {} }) => <span>{StrategyCategory.find(x => x.id === record[source]).name}</span>;
+const getCatName(id){
+    let res = StrategyCategory.find(x => x.id === id);
+    if(res){
+        return res.name;
+    }else{
+        return id;
+    }
+}
+
+const StrategyField = ({ source, record = {} }) => <span>{ getCatName(record[source])}</span>;
 
 const ListPagination = props => <Pagination rowsPerPageOptions={[10, 25, 50, 100]} {...props} />
 const reasonOptionRenderer = reason => `${reason.content} : ${reason.score}`;
@@ -62,7 +72,7 @@ const AxisPriceField = ({ source, record, ...props  }) => {
     let supportPrice2 = axisPrice - (record.high - record.low);
     let supportPrice3 = supportPrice1 - (record.high - record.low);
 
-    let upPrice = Math.max((1 + record.volatility*2) * record.close, resistPrice2);
+    let upPrice = Math.max((1 + record.volatility) * record.close, resistPrice2);
     let downPrice = Math.max((1 - record.volatility) * record.close, supportPrice1);
     let suggestBuyPrice1 = Math.min((1 - record.volatility) * record.close, supportPrice2);
     let suggestBuyPrice2 = Math.min((1 + record.volatility) * record.close, resistPrice1);
@@ -83,12 +93,31 @@ const AxisPriceField = ({ source, record, ...props  }) => {
         </ul>
     );
 }
+const HyperParamsField = ({ source, record, ...props  }) => {
+    let hps = record.hyper_params.split(" ");
+
+    return (
+        <ul>{
+            hps.map((item, index) => {
+                return (<li key={index}>{item}</li>);
+            })
+        }
+        </ul>
+    );
+}
 
 const ListActions = ({resource, filters, displayedFilters, filterValues, basePath, showFilter}) => (
     <CardActions style={cardActionStyle}>
         <CreateButton basePath={basePath}/>
         <RefreshButton/>
     </CardActions>
+);
+const BulkActionButtons = props => (
+    <Fragment>
+        <AddToGroupButton {...props}/>
+        {/* default bulk delete action */}
+        <BulkDeleteButton {...props} />
+    </Fragment>
 );
 
 const ShowActions = ({ basePath, data, resource }) => (
@@ -131,7 +160,7 @@ const ListFilter = (props) => (
 
 export const SelectedStockList = (props) => (
     <List {...props} title={"选股列表"} filters={<ListFilter />} sort={{field: 'date', order: 'DESC'}} perPage={25} pagination={<ListPagination />}
-          actions={<ListActions/>}>
+          actions={<ListActions/>} bulkActionButtons={<BulkActionButtons />}>
         <Datagrid options={{multiSelectable:true}} bodyoptions={{ stripedRows: true, showRowHover: true , displayRowCheckbox:true}}
                   headeroptions={{adjustForCheckbox:true}} rowoptions={{selectable: true}} rowClick="expand" expand={<LogShow />}>
             {/*<TextField source="id"/>*/}
@@ -140,14 +169,14 @@ export const SelectedStockList = (props) => (
             <TextField source="name"label={"名称"}/>
             <SelectField source="star" label={"评级"} choices={StarSelect} />
             <StrategyField source="strategy" label={"策略名称"}/>
-            <TextField source="hyper_params"label={"超参数组合"}/>
+            <HyperParamsField source="hyper_params"label={"超参数组合"}/>
             <NumberField source="good_bad"label={"gb策略值"}/>
             <NumberField source="volatility"label={"波动率"} options={{ style: 'percent', maximumFractionDigits: 2 }} />
             <NumberField source="volat_price"label={"波动价格"} options={{ style: 'currency', currency: 'CNY' }}/>
             <AxisPriceField label={"轴心价格"}/>
             <NumberField source="vol50_change"label={"成交量变动"} options={{ maximumFractionDigits: 2 }} />
-            <NumberField source="close_slope"label={"close斜率"} options={{ maximumFractionDigits: 2 }} />
-            <NumberField source="open_slope"label={"open斜率"} options={{ maximumFractionDigits: 2 }} />
+            {/*<NumberField source="close_slope"label={"close斜率"} options={{ maximumFractionDigits: 2 }} />*/}
+            {/*<NumberField source="open_slope"label={"open斜率"} options={{ maximumFractionDigits: 2 }} />*/}
             <NumberField source="totalCapital"label={"流通市值"} options={{ style: 'currency', currency: 'CNY' }}/>
             <SelectField source="status" label={"状态"} choices={StatusSelect} />
             <EditButton/>
@@ -168,8 +197,8 @@ export const LogShow = (props) => (
         <Datagrid options={{multiSelectable:true}}>
             <TextField source="expected_high_price" label={"止盈价格"}/>
             <TextField source="expected_low_price" label={"止损价格"}/>
-            <TextField source="suggested_high_price" label={"建议较高价格"}/>
-            <TextField source="suggested_low_price" label={"建议较低价格"}/>
+            <TextField source="suggested_high_price" label={"建议买入价格(高)"}/>
+            <TextField source="suggested_low_price" label={"建议买入价格(低)"}/>
             <TextField source="current_price" label={"当前价格"}/>
             <SelectField source="suggested_action" label={"推荐动作"} choices={SuggestionSelect} />
             <SelectField source="star" label={"评级"} choices={StarSelect} />
@@ -219,12 +248,12 @@ export const SelectedStockShow = (props) => (
 export const SelectedStockEdit = (props) => (
     <Edit title={"编辑选中股票"} actions={<EditActions/>} {...props}>
         <SimpleForm>
-            <DisabledInput source="id"/>
-            <DisabledInput source="date" label={"选股日期"}/>
-            <DisabledInput source="strategy" label={"策略名称"}/>
-            <DisabledInput source="hyper_params"label={"超参数组合"}/>
-            <DisabledInput source="code"label={"代码"}/>
-            <DisabledInput source="name"label={"名称"}/>
+            <TextField source="id"/>
+            <TextField source="date" label={"选股日期"}/>
+            <TextField source="strategy" label={"策略名称"}/>
+            <TextField source="hyper_params"label={"超参数组合"}/>
+            <TextField source="code"label={"代码"}/>
+            <TextField source="name"label={"名称"}/>
             <SelectInput source="star" label={"评级"} choices={StarSelect} />
             <FormDataConsumer>
                 {({ formData, ...rest }) => {
@@ -245,8 +274,8 @@ export const SelectedStockEdit = (props) => (
                 sort={{ field: 'createdAt', order: 'ASC' }}
             >
                 <Datagrid>
-                    <TextField source="suggested_low_price" label={"建议较低价格"}/>
-                    <TextField source="suggested_high_price" label={"建议较高价格"}/>
+                    <TextField source="suggested_low_price" label={"建议买入价格(低)"}/>
+                    <TextField source="suggested_high_price" label={"建议买入价格(高)"}/>
                     <TextField source="expected_low_price" label={"止损价格"}/>
                     <TextField source="expected_high_price" label={"止盈价格"}/>
                     <TextField source="current_price" label={"当前价格"}/>
