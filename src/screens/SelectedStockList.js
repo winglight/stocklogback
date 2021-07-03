@@ -50,7 +50,7 @@ const cardActionStyle = {
     float: 'right',
 };
 
-const getCatName(id){
+const getCatName = (id) => {
     let res = StrategyCategory.find(x => x.id === id);
     if(res){
         return res.name;

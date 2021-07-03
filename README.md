@@ -19,6 +19,16 @@ parse-dashboard --appId stocklog --masterKey dkElkfdjiEOij843lKD --serverURL "ht
 parse-dashboard --appId stocklog --masterKey dkElkfdjiEOij843lKD --serverURL "http://stocklogs.herokuapp.com/parse" --appName stocklog
 ```
 
+Open PowerShell as Admin.
+
+stop winnat with command below:
+
+net stop winnat
+
+start winnat again with command below:
+
+net start winnat
+
 version: "2"
 services:
   jellyfin:
