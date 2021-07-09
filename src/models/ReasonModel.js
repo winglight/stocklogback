@@ -9,7 +9,7 @@ export class ReasonModel extends Parse.Object {
 
         this.seq = 0;//顺序
         this.content = "";//理由
-        this.score = 0;//分数，-1 - 负面；1 - 正面；0 - 中性
+        this.score = 0;//分数;-1 - 负面；1 - 正面；0 - 中性
     }
 
     findAll() {

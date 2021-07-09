@@ -1,5 +1,6 @@
 import React, { Fragment } from 'react';
 import Button from '@material-ui/core/Button';
+import { withStyles } from '@material-ui/core/styles';
 import {
     List,
     Filter,
@@ -106,6 +107,14 @@ const HyperParamsField = ({ source, record, ...props  }) => {
     );
 }
 
+const RedTextField = ({ source, record = {}, ...props }) => {
+    if(record["return2"] > 0.03){
+        return <span style={{color: 'red'}} {...props} >{record[source]}</span>
+    }else{
+        return <span {...props} >{record[source]}</span>
+    }
+};
+
 const ListActions = ({resource, filters, displayedFilters, filterValues, basePath, showFilter}) => (
     <CardActions style={cardActionStyle}>
         <CreateButton basePath={basePath}/>
@@ -155,6 +164,7 @@ const ListFilter = (props) => (
         <TextInput label="股票编码" source="code" filterdefaultvalues="" alwaysOn />
         <TextInput label="搜索" source="q" filterdefaultvalues="" alwaysOn />
         <SelectInput label="状态" source="status" choices={StatusSelect} filterdefaultvalues="" alwaysOn/>
+        <SelectInput label="隔天回报率" source="hyper_params" choices={HyperParams} filterdefaultvalues="" alwaysOn/>
     </Filter>
 );
 
@@ -165,19 +175,21 @@ export const SelectedStockList = (props) => (
                   headeroptions={{adjustForCheckbox:true}} rowoptions={{selectable: true}} rowClick="expand" expand={<LogShow />}>
             {/*<TextField source="id"/>*/}
             <TextField source="date" label={"选股日期"}/>
-            <TextField source="code"label={"代码"}/>
-            <TextField source="name"label={"名称"}/>
+            <RedTextField source="code"label={"代码"}/>
+            <RedTextField source="name"label={"名称"}/>
             <SelectField source="star" label={"评级"} choices={StarSelect} />
             <StrategyField source="strategy" label={"策略名称"}/>
             <HyperParamsField source="hyper_params"label={"超参数组合"}/>
-            <NumberField source="good_bad"label={"gb策略值"}/>
+            {/* <NumberField source="good_bad"label={"gb策略值"}/>
             <NumberField source="volatility"label={"波动率"} options={{ style: 'percent', maximumFractionDigits: 2 }} />
-            <NumberField source="volat_price"label={"波动价格"} options={{ style: 'currency', currency: 'CNY' }}/>
+            <NumberField source="volat_price"label={"波动价格"} options={{ style: 'currency', currency: 'CNY' }}/> */}
             <AxisPriceField label={"轴心价格"}/>
-            <NumberField source="vol50_change"label={"成交量变动"} options={{ maximumFractionDigits: 2 }} />
+            {/* <NumberField source="vol50_change"label={"成交量变动"} options={{ maximumFractionDigits: 2 }} /> */}
             {/*<NumberField source="close_slope"label={"close斜率"} options={{ maximumFractionDigits: 2 }} />*/}
             {/*<NumberField source="open_slope"label={"open斜率"} options={{ maximumFractionDigits: 2 }} />*/}
-            <NumberField source="totalCapital"label={"流通市值"} options={{ style: 'currency', currency: 'CNY' }}/>
+            {/* <NumberField source="totalCapital"label={"流通市值"} options={{ style: 'currency', currency: 'CNY' }}/> */}
+            <NumberField source="return1"label={"隔天回报率"} options={{ style: 'percent', maximumFractionDigits: 2 }}/>
+            <NumberField source="return2"label={"当天回报率"} options={{ style: 'percent', maximumFractionDigits: 2 }}/>
             <SelectField source="status" label={"状态"} choices={StatusSelect} />
             <EditButton/>
             <ShowButton/>

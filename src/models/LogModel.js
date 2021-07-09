@@ -66,7 +66,7 @@ export default class LogModel extends Parse.Object {
         this.suggested_action = SuggestionType.NONE;//推荐动作
         this.star = "D";//评级：A - 建议购买；B - 待观察；C - 不建议购买
         this.score = 0;//评分——来自理由的综合得分
-        this.reason_ids = [];//理由，id数组
+        this.reason_ids = [];//理由;id数组
         this.logType = LogType.UNCANDIDATE;//log类型
         this.comment = "";//操作评价
         this.isSuccessful = false;//操作是否满意
