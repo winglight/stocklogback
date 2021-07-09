@@ -95,5 +95,3 @@
 //         </div>
 //     );
 // };
-
-// export default SelectedStocksTable;
