@@ -18,6 +18,8 @@
 .env.test.local
 .env.production.local
 
+.ipynb_checkpoints
+
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
