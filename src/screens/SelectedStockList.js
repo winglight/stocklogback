@@ -188,6 +188,7 @@ export const SelectedStockList = (props) => (
             {/*<NumberField source="close_slope"label={"close斜率"} options={{ maximumFractionDigits: 2 }} />*/}
             {/*<NumberField source="open_slope"label={"open斜率"} options={{ maximumFractionDigits: 2 }} />*/}
             {/* <NumberField source="totalCapital"label={"流通市值"} options={{ style: 'currency', currency: 'CNY' }}/> */}
+            <NumberField source="market_focus_per"label={"市场"} options={{ style: 'percent', maximumFractionDigits: 2 }}/>
             <NumberField source="return1"label={"隔天回报率"} options={{ style: 'percent', maximumFractionDigits: 2 }}/>
             <NumberField source="return2"label={"当天回报率"} options={{ style: 'percent', maximumFractionDigits: 2 }}/>
             <SelectField source="status" label={"状态"} choices={StatusSelect} />
